@@ -1,27 +1,29 @@
 // This is a program for Bucket Sort Algorithm 
-
 #include<iostream>
 #include<vector>
 #include<algorithm>
 using namespace std;
-void display(float *array, int size) {
-   for(int i = 0; i<size; i++)
-      cout << array[i] << " ";
+
+void display(const vector<float>& array) {
+   for(float val : array)
+      cout << val << " ";
    cout << endl;
 }
-void bucketSort(float *array, int size) {
-   vector<float> bucket[size];
-   for(int i = 0; i<size; i++)  {          //put elements into different buckets
-      bucket[int(size*array[i])].push_back(array[i]);
+void bucketSort(vector<float>& array) {
+   int size = array.size();
+   vector<vector<float>> bucket(size);
+   for(int i = 0; i < size; i++) {          
+      int bucketIndex = size * array[i];
+      if(bucketIndex >= size) bucketIndex = size - 1; 
+      bucket[bucketIndex].push_back(array[i]);
    }
-   for(int i = 0; i<size; i++) {
-      sort(bucket[i].begin(), bucket[i].end());       //sort individual vectors
+   for(int i = 0; i < size; i++) {
+      sort(bucket[i].begin(), bucket[i].end());
    }
    int index = 0;
-   for(int i = 0; i<size; i++) {
-      while(!bucket[i].empty()) {
-         array[index++] = *(bucket[i].begin());
-         bucket[i].erase(bucket[i].begin());
+   for(int i = 0; i < size; i++) {
+      for(float val : bucket[i]) {
+         array[index++] = val;
       }
    }
 }
@@ -29,14 +31,22 @@ int main() {
    int n;
    cout << "Enter the number of elements: ";
    cin >> n;
-   float arr[n];     //create an array with given number of elements
-   cout << "Enter elements:" << endl;
-   for(int i = 0; i<n; i++) {
+
+   vector<float> arr(n);
+   cout << "Enter elements (between 0 and 1):" << endl;
+   for(int i = 0; i < n; i++) {
       cin >> arr[i];
+      if(arr[i] < 0 || arr[i] >= 1) {
+         cout << "Error: Please enter numbers between 0 and 1.\n";
+         return -1;
+      }
    }
+
    cout << "Array before Sorting: ";
-   display(arr, n);
-   bucketSort(arr, n);
+   display(arr);
+   bucketSort(arr);
    cout << "Array after Sorting: ";
-   display(arr, n);
+   display(arr);
+
+   return 0;
 }
