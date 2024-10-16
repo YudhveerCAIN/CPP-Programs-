@@ -1,0 +1,51 @@
+#include <iostream>
+using namespace std;
+
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+public:
+    void flatten(TreeNode* root) {
+        TreeNode* prev = nullptr;
+        flattenHelper(root, prev);
+    }
+    
+    void flattenHelper(TreeNode* node, TreeNode*& prev) {
+        if (!node) return;
+        
+        flattenHelper(node->right, prev);
+        flattenHelper(node->left, prev);
+    
+        node->right = prev;
+        node->left = nullptr;
+        prev = node;
+    }
+};
+
+void printFlattenedList(TreeNode* root) {
+    TreeNode* curr = root;
+    while (curr) {
+        cout << curr->val << " -> ";
+        curr = curr->right;
+    }
+    cout << "nullptr" << endl;
+}
+
+int main() {
+    TreeNode* root = new TreeNode(1);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(5);
+    root->left->left = new TreeNode(3);
+    root->left->right = new TreeNode(4);
+    root->right->right = new TreeNode(6);
+
+    Solution().flatten(root);
+    printFlattenedList(root);
+    
+    return 0;
+}
